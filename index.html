@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptCoder - Alternative Coding Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header h1 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .char-counter {
+            text-align: right;
+            margin-top: 5px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .char-counter.warning {
+            color: #dc3545;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .result-area {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-area h3 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .result-content {
+            color: #6c757d;
+            line-height: 1.6;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .contact-info h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .contact-methods {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .contact-card {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .contact-card h5 {
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .contact-card p {
+            color: #6c757d;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .hidden-contact {
+            filter: blur(5px);
+            user-select: none;
+            transition: filter 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .hidden-contact:hover {
+            filter: blur(0);
+        }
+
+        .hidden-contact::after {
+            content: "Hover to reveal";
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            font-size: 0.8em;
+            color: #6c757d;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .hidden-contact:hover::after {
+            opacity: 1;
+        }
+
+        .spam-notice {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .spam-notice i {
+            color: #dc3545;
+        }
+
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 PromptCoder</h1>
+            <p>An alternative approach to code generation - No LLMs, just human expertise!</p>
+        </div>
+
+        <div class="content">
+            <div class="input-group">
+                <label for="prompt">Enter your coding prompt (max 2kB):</label>
+                <textarea id="prompt" rows="6" placeholder="Describe what code you need... (e.g., 'Write a function to calculate fibonacci numbers in Python')" maxlength="2048"></textarea>
+                <div class="char-counter" id="charCounter">0 / 2048 bytes</div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="processPrompt()">Generate Code</button>
+                <button class="btn btn-secondary" onclick="clearPrompt()">Clear</button>
+            </div>
+
+            <div class="result-area" id="resultArea" style="display: none;">
+                <h3>📝 Result:</h3>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+
+            <div class="contact-info" id="contactInfo" style="display: none;">
+                <h4>🔍 Need Human Assistance?</h4>
+                <p>Our stub function couldn't resolve this prompt. Here's how to reach the developer:</p>
+                
+                <div class="contact-methods">
+                    <div class="contact-card">
+                        <h5>📧 Email (Preferred)</h5>
+                        <div class="hidden-contact" onclick="revealContact(this)">
+                            coder[at]example[dot]com
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <h5>🐦 Twitter</h5>
+                        <div class="hidden-contact" onclick="revealContact(this)">
+                            @coder_handle (DM open)
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <h5>💬 Discord</h5>
+                        <div class="hidden-contact" onclick="revealContact(this)">
+                            coder#1234
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spam-notice">
+                    <i>⚠️ Anti-spam measure: Contact details are blurred. Hover to reveal, click to copy.</i>
+                    <br>
+                    <small>Please include your prompt when contacting. Rate limiting: max 3 contacts per hour.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Stub function that simulates a non-LLM coder
+        function stubCoder(prompt) {
+            // This is a placeholder that always "fails" to resolve
+            // In a real implementation, this could contain rule-based logic,
+            // template matching, or other non-ML approaches
+            
+            // Check if prompt is empty
+            if (!prompt || prompt.trim() === '') {
+                return {
+                    success: false,
+                    reason: 'empty_prompt',
+                    message: 'Please enter a prompt.'
+                };
+            }
+
+            // Check for simple patterns that might be resolved without ML
+            const lowerPrompt = prompt.toLowerCase();
+            
+            // Example of simple rule-based responses (non-ML)
+            if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi')) {
+                return {
+                    success: true,
+                    code: '// Hello there!\nconsole.log("Hello, world!");',
+                    message: 'Simple greeting detected.'
+                };
+            }
+
+            if (lowerPrompt.includes('fibonacci') && lowerPrompt.includes('python')) {
+                return {
+                    success: true,
+                    code: `def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Example usage
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")`,
+                    message: 'Fibonacci function generated.'
+                };
+            }
+
+            // Default: cannot resolve
+            return {
+                success: false,
+                reason: 'cannot_resolve',
+                message: 'This prompt requires human expertise.',
+                prompt: prompt
+            };
+        }
+
+        // Track contact attempts for rate limiting
+        let contactAttempts = [];
+        const MAX_CONTACTS_PER_HOUR = 3;
+
+        function processPrompt() {
+            const promptText = document.getElementById('prompt').value;
+            
+            // Check size (2kB = 2048 bytes)
+            const size = new Blob([promptText]).size;
+            if (size > 2048) {
+                alert(`Prompt too large! Current size: ${size} bytes. Maximum: 2048 bytes.`);
+                return;
+            }
+
+            // Call stub function
+            const result = stubCoder(promptText);
+
+            // Display result
+            const resultArea = document.getElementById('resultArea');
+            const resultContent = document.getElementById('resultContent');
+            
+            if (result.success) {
+                resultArea.style.display = 'block';
+                resultContent.innerHTML = `<pre style="background: #272822; color: #f8f8f2; padding: 15px; border-radius: 8px; overflow-x: auto;">${escapeHtml(result.code)}</pre>`;
+                document.getElementById('contactInfo').style.display = 'none';
+            } else {
+                resultArea.style.display = 'block';
+                resultContent.textContent = result.message;
+                
+                // Show contact info if cannot resolve
+                if (result.reason === 'cannot_resolve') {
+                    // Check rate limiting
+                    const now = Date.now();
+                    contactAttempts = contactAttempts.filter(time => now - time < 3600000); // Remove attempts older than 1 hour
+                    
+                    if (contactAttempts.length < MAX_CONTACTS_PER_HOUR) {
+                        document.getElementById('contactInfo').style.display = 'block';
+                        contactAttempts.push(now);
+                    } else {
+                        document.getElementById('contactInfo').style.display = 'none';
+                        resultContent.textContent += '\n\n⚠️ Rate limit reached. Please try again later or check back for updates.';
+                    }
+                }
+            }
+        }
+
+        function clearPrompt() {
+            document.getElementById('prompt').value = '';
+            document.getElementById('charCounter').textContent = '0 / 2048 bytes';
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('contactInfo').style.display = 'none';
+        }
+
+        // Update character counter
+        document.getElementById('prompt').addEventListener('input', function() {
+            const text = this.value;
+            const bytes = new Blob([text]).size;
+            const counter = document.getElementById('charCounter');
+            counter.textContent = `${bytes} / 2048 bytes`;
+            
+            if (bytes > 2048) {
+                counter.classList.add('warning');
+            } else {
+                counter.classList.remove('warning');
+            }
+        });
+
+        // Helper function to escape HTML
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Function to reveal and copy contact info
+        function revealContact(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback
+                const originalText = element.textContent;
+                element.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    element.textContent = originalText;
+                }, 1000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Add some example prompts
+        const examplePrompts = [
+            "Write a Python function to calculate fibonacci numbers",
+            "Create a React component for a todo list",
+            "Hello, can you help me with JavaScript?",
+            "Write a complex algorithm for sorting large datasets"
+        ];
+
+        // Optional: Add example selector
+        const header = document.querySelector('.header p');
+        const exampleLink = document.createElement('span');
+        exampleLink.style.cssText = 'display: block; margin-top: 10px; font-size: 0.9em; cursor: pointer; color: #667eea;';
+        exampleLink.innerHTML = '📋 Try an example';
+        exampleLink.onclick = () => {
+            const randomPrompt = examplePrompts[Math.floor(Math.random() * examplePrompts.length)];
+            document.getElementById('prompt').value = randomPrompt;
+            document.getElementById('charCounter').textContent = `${new Blob([randomPrompt]).size} / 2048 bytes`;
+        };
+        header.appendChild(exampleLink);
+    </script>
+</body>
+</html>
