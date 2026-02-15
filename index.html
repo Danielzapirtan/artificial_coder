@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>artificial_coder - Alternative Coding Assistant</title>
+    <title>artificial_coder - Asistent Alternativ de Codare</title>
     <style>
         * {
             margin: 0;
@@ -205,7 +205,7 @@
         }
 
         .hidden-contact::after {
-            content: "Hover to reveal";
+            content: "Treceți mouse-ul pentru a vedea";
             position: absolute;
             bottom: -20px;
             left: 0;
@@ -245,33 +245,33 @@
     <div class="container">
         <div class="header">
             <h1>🚀 artificial_coder</h1>
-            <p>An alternative approach to code generation - No LLMs, just human expertise!</p>
+            <p>O abordare alternativă pentru generarea codului - Fără LLM-uri, doar expertiză umană!</p>
         </div>
 
         <div class="content">
             <div class="input-group">
-                <label for="prompt">Enter your coding prompt (max 2kB):</label>
-                <textarea id="prompt" rows="6" placeholder="Describe what code you need... (e.g., 'Write a function to calculate fibonacci numbers in Python')" maxlength="2048"></textarea>
-                <div class="char-counter" id="charCounter">0 / 2048 bytes</div>
+                <label for="prompt">Introduceți solicitarea de cod (max 2kB):</label>
+                <textarea id="prompt" rows="6" placeholder="Descrieți ce cod aveți nevoie... (ex: 'Scrie o funcție pentru a calcula numerele Fibonacci în Python')" maxlength="2048"></textarea>
+                <div class="char-counter" id="charCounter">0 / 2048 octeți</div>
             </div>
 
             <div class="button-group">
-                <button class="btn btn-primary" onclick="processPrompt()">Generate Code</button>
-                <button class="btn btn-secondary" onclick="clearPrompt()">Clear</button>
+                <button class="btn btn-primary" onclick="processPrompt()">Generează Cod</button>
+                <button class="btn btn-secondary" onclick="clearPrompt()">Șterge</button>
             </div>
 
             <div class="result-area" id="resultArea" style="display: none;">
-                <h3>📝 Result:</h3>
+                <h3>📝 Rezultat:</h3>
                 <div class="result-content" id="resultContent"></div>
             </div>
 
             <div class="contact-info" id="contactInfo" style="display: none;">
-                <h4>🔍 Need Human Assistance?</h4>
-                <p>Our stub function couldn't resolve this prompt. Here's how to reach the developer:</p>
+                <h4>🔍 Aveți nevoie de asistență umană?</h4>
+                <p>Funcția noastră stub nu a putut rezolva această solicitare. Iată cum puteți contacta dezvoltatorul:</p>
                 
                 <div class="contact-methods">
                     <div class="contact-card">
-                        <h5>📧 Email (Preferred)</h5>
+                        <h5>📧 Email (Preferat)</h5>
                         <div class="hidden-contact" onclick="revealContact(this)">
                             antoniudanielzapirtan@gmail.com
                         </div>
@@ -280,11 +280,11 @@
                     <div class="contact-card" style="display: none;">
                         <h5>🐦 Twitter</h5>
                         <div class="hidden-contact" onclick="revealContact(this)">
-                            @coder_handle (DM open)
+                            @coder_handle (DM deschis)
                         </div>
                     </div>
                     
-                    <div class="contact-card style="display: none;">
+                    <div class="contact-card" style="display: none;">
                         <h5>💬 Discord</h5>
                         <div class="hidden-contact" onclick="revealContact(this)">
                             coder#1234
@@ -293,9 +293,9 @@
                 </div>
 
                 <div class="spam-notice">
-                    <i>⚠️ Anti-spam measure: Contact details are blurred. Hover to reveal, click to copy.</i>
+                    <i>⚠️ Măsură anti-spam: Detaliile de contact sunt estompate. Treceți mouse-ul pentru a vedea, faceți clic pentru a copia.</i>
                     <br>
-                    <small>Please include your prompt when contacting. Rate limiting: max 3 contacts per hour.</small>
+                    <small>Vă rugăm să includeți solicitarea dvs. când contactați. Limită de rată: max 3 contacte pe oră.</small>
                 </div>
             </div>
         </div>
@@ -313,7 +313,7 @@
                 return {
                     success: false,
                     reason: 'empty_prompt',
-                    message: 'Please enter a prompt.'
+                    message: 'Vă rugăm să introduceți o solicitare.'
                 };
             }
 
@@ -321,11 +321,11 @@
             const lowerPrompt = prompt.toLowerCase();
             
             // Example of simple rule-based responses (non-ML)
-            if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi')) {
+            if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi') || lowerPrompt.includes('salut')) {
                 return {
                     success: true,
-                    code: '// Hello there!\nconsole.log("Hello, world!");',
-                    message: 'Simple greeting detected.'
+                    code: '// Salut!\nconsole.log("Hello, world!");',
+                    message: 'Salutare simplă detectată.'
                 };
             }
 
@@ -337,10 +337,10 @@
         return n
     return fibonacci(n-1) + fibonacci(n-2)
 
-# Example usage
+# Exemplu de utilizare
 for i in range(10):
     print(f"F({i}) = {fibonacci(i)}")`,
-                    message: 'Fibonacci function generated.'
+                    message: 'Funcție Fibonacci generată.'
                 };
             }
 
@@ -348,7 +348,7 @@ for i in range(10):
             return {
                 success: false,
                 reason: 'cannot_resolve',
-                message: 'This prompt requires human expertise.',
+                message: 'Această solicitare necesită expertiză umană.',
                 prompt: prompt
             };
         }
@@ -363,7 +363,7 @@ for i in range(10):
             // Check size (2kB = 2048 bytes)
             const size = new Blob([promptText]).size;
             if (size > 2048) {
-                alert(`Prompt too large! Current size: ${size} bytes. Maximum: 2048 bytes.`);
+                alert(`Solicitarea este prea mare! Dimensiune curentă: ${size} octeți. Maxim: 2048 octeți.`);
                 return;
             }
 
@@ -393,7 +393,7 @@ for i in range(10):
                         contactAttempts.push(now);
                     } else {
                         document.getElementById('contactInfo').style.display = 'none';
-                        resultContent.textContent += '\n\n⚠️ Rate limit reached. Please try again later or check back for updates.';
+                        resultContent.textContent += '\n\n⚠️ Limită de rată atinsă. Vă rugăm să încercați din nou mai târziu sau reveniți pentru actualizări.';
                     }
                 }
             }
@@ -401,7 +401,7 @@ for i in range(10):
 
         function clearPrompt() {
             document.getElementById('prompt').value = '';
-            document.getElementById('charCounter').textContent = '0 / 2048 bytes';
+            document.getElementById('charCounter').textContent = '0 / 2048 octeți';
             document.getElementById('resultArea').style.display = 'none';
             document.getElementById('contactInfo').style.display = 'none';
         }
@@ -411,7 +411,7 @@ for i in range(10):
             const text = this.value;
             const bytes = new Blob([text]).size;
             const counter = document.getElementById('charCounter');
-            counter.textContent = `${bytes} / 2048 bytes`;
+            counter.textContent = `${bytes} / 2048 octeți`;
             
             if (bytes > 2048) {
                 counter.classList.add('warning');
@@ -436,7 +436,7 @@ for i in range(10):
             navigator.clipboard.writeText(text).then(() => {
                 // Visual feedback
                 const originalText = element.textContent;
-                element.textContent = '✓ Copied!';
+                element.textContent = '✓ Copiat!';
                 setTimeout(() => {
                     element.textContent = originalText;
                 }, 1000);
@@ -447,21 +447,21 @@ for i in range(10):
 
         // Add some example prompts
         const examplePrompts = [
-            "Write a Python function to calculate fibonacci numbers",
-            "Create a React component for a todo list",
-            "Hello, can you help me with JavaScript?",
-            "Write a complex algorithm for sorting large datasets"
+            "Scrie o funcție Python pentru a calcula numerele Fibonacci",
+            "Creează o componentă React pentru o listă de sarcini",
+            "Salut, mă poți ajuta cu JavaScript?",
+            "Scrie un algoritm complex pentru sortarea seturilor mari de date"
         ];
 
         // Optional: Add example selector
         const header = document.querySelector('.header p');
         const exampleLink = document.createElement('span');
         exampleLink.style.cssText = 'display: block; margin-top: 10px; font-size: 0.9em; cursor: pointer; color: #667eea;';
-        exampleLink.innerHTML = '📋 Try an example';
+        exampleLink.innerHTML = '📋 Încearcă un exemplu';
         exampleLink.onclick = () => {
             const randomPrompt = examplePrompts[Math.floor(Math.random() * examplePrompts.length)];
             document.getElementById('prompt').value = randomPrompt;
-            document.getElementById('charCounter').textContent = `${new Blob([randomPrompt]).size} / 2048 bytes`;
+            document.getElementById('charCounter').textContent = `${new Blob([randomPrompt]).size} / 2048 octeți`;
         };
         header.appendChild(exampleLink);
     </script>
